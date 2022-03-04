@@ -15,3 +15,11 @@
 - routing을 위한 별도의 boilerplate 코드를 작성할 필요가 없음
 - 직관적
 
+## 54~56. Static, Nested Routes
+- 간단한 예시로 설명한다.
+```
+pages/index.js        // mydomain.com/
+pages/about.js        // mydomain.com/about
+pages/about/index.js  // mydomain.com/about
+pages/about/list.js   // mydomain.com/about/list
+```
