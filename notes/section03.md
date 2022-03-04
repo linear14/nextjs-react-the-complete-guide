@@ -47,10 +47,21 @@ pages/about/list.js   // mydomain.com/about/list
 - `next/router` 패키지에서 `useRouter` hook을 import 해서 사용할 수 있다.
 - useRouter()가 반환하는 객체에는 path 및 query 등의 라우팅 관련 프로퍼티와 메서드가 들어있다.
 - `path`프로퍼티를 통해 현재 path(/portfolio/[projectId])의 정보를 얻을 수 있다.
-- `query`프로퍼티를 통해 현재 url의 파라미터 및 쿼리 정보를 얻을 수 있다. `pages/portfolio/[id]`로 설정되어 있는 라우팅 설정값에 `mydomain.com/portfolio/4`를 통해 접근한다면, query 에는 `{id: '4'}` 형식의 객체가 담겨있게 된다.
+- `query`프로퍼티를 통해 현재 url의 파라미터 및 쿼리 정보를 얻을 수 있다. `pages/portfolio/[id]`로 설정되어 있는 라우팅 설정값에 `mydomain.com/portfolio/4`를 통해 접근한다면, query 에는 `{ id: '4' }` 형식의 객체가 담겨있게 된다.
 - 여기서 얻은 정보를 이용해 server와 통신하는 등 활용이 가능하다.
 
 ### Nested Dynamic Routes
 - Static Route 방식과 동일하게 square bracket을 이용한 Dynamic Route 역시 Nested Route 사용이 가능하다.
 - useRouter를 통해 얻어낸 query 객체에는 최종 path까지의 모든 dynamic parameter가 key-value 형태로 보관된다.
   예를 들어, `pages/clients/[clientId]/[projectId]` 파일 형태로 설정되어 있는 라우팅 베이스에 `mydomain.com/clients/harry/3`이 매칭됐다면 `{ clientId: 'harry', projectId: '3' }` 객체를 얻어낼 수 있다.
+
+## 60. Adding Catch-All Routes
+### Catch-All Routes?
+- 파라미터의 수에 제한을 두지 않는 경우의 라우팅을 허용하기 위해 사용한다.
+- `[...keyword]` 형식의 파일을 만들어 사용한다.
+- useRouter 반환 객체의 query 프로퍼티를 찍어보면 `{ keyword: Array(n) }` 의 형태로 parameter 들이 보관된다.
+
+### 언제 사용할까?
+- 만약 등록된 전체 포스트 중, 특정 연도에 발행된 게시글만 보고 싶다면 `post/2020` 의 형태로 필터링 할 수 있다. 그런데, 특정 연도뿐 아니라 특정 월까지 필터 항목에 넣고 싶다면 어떻게 할까? `post/2020/7`의 형태로 라우팅을 할 수 있다.
+- 이렇듯, 동적으로 path의 depth를 조절하면서 원하는 작업을 할 수 있다.
+- nomad coder 강의를 들을 때, SEO를 위해서도 사용할 수 있다고 들었던 것 같다. 예를 들어, 게시글의 고유 idx가 n이라는 숫자일 경우 `post/n`을 통해 게시글 상세 화면으로 넘어갈 수 있다. 하지만, `post/(게시글제목)/n` 의 형태로 라우팅을 한다면 n의 값도 챙길 수 있고 url에 게시글 제목이 있으므로 SEO에도 좋다는 것이다. (그렇게 학습했던 것 같은데, 다시 한 번 알아보고 수정하겠다.)
