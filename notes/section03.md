@@ -65,3 +65,55 @@ pages/about/list.js   // mydomain.com/about/list
 - 만약 등록된 전체 포스트 중, 특정 연도에 발행된 게시글만 보고 싶다면 `post/2020` 의 형태로 필터링 할 수 있다. 그런데, 특정 연도뿐 아니라 특정 월까지 필터 항목에 넣고 싶다면 어떻게 할까? `post/2020/7`의 형태로 라우팅을 할 수 있다.
 - 이렇듯, 동적으로 path의 depth를 조절하면서 원하는 작업을 할 수 있다.
 - nomad coder 강의를 들을 때, SEO를 위해서도 사용할 수 있다고 들었던 것 같다. 예를 들어, 게시글의 고유 idx가 n이라는 숫자일 경우 `post/n`을 통해 게시글 상세 화면으로 넘어갈 수 있다. 하지만, `post/(게시글제목)/n` 의 형태로 라우팅을 한다면 n의 값도 챙길 수 있고 url에 게시글 제목이 있으므로 SEO에도 좋다는 것이다. (그렇게 학습했던 것 같은데, 다시 한 번 알아보고 수정하겠다.)
+
+## 61 ~ 64. Navigation
+### 포함 강의
+61. Navigating with the "Link" Component
+62. Navigating To Dynamic Routes
+63. A Different Way Of Setting Link Hrefs
+64. Navigating Programmatically
+
+### 라우팅 방법 1. Link Component (href value: string)
+```jsx
+import Link from 'next/link'; // export default
+
+<Link href=`/project/${project.id}`>{project.name}</Link>
+```
+### 왜 Link를 사용하는가?
+- a tag를 통해 라우팅시 HTML 재호출
+- a tag를 통해 라우팅시 보관하고 있던 상태 초기화
+- 기타 여러가지 Link만의 이점이 있다고 한다. (Link에 해당하는 부분 hover시 사용될 데이터를 미리 fetch 한다던지)
+
+### replace props
+- 현재 페이지를 대체한다. (현재 페이지는 뒤로가기를 통해 다시 못돌아온다.)
+- props에 대해서는 추후에 다시 학습한다.
+
+### 라우팅 방법 2. Link Component (href value: object)
+- 실제 파일 구조대로 pathname을 지정할 수 있고, query 값도 key-value 형태로 직접 넣어줄 수 있다.
+```jsx
+import Link from 'next/link'; // export default
+
+<Link href={{
+  pathname: '/project/[id]',
+  query: { id: project.id }
+}}>{project.name}</Link>
+```
+
+### 언제 사용하는가?
+- href props가 길어질 때 사용할 수 있다.
+
+### 라우팅 방법 3. Navigating Programmatically
+- useRouter 반환 객체의 push 등의 메서드를 이용해서 (replace 등도 존재) 직접 라우팅한다.
+```jsx
+function pushHandler(id) {
+  router.push({
+    pathname: '/clients/[id]',
+    query: { id }
+  });
+}
+```
+
+### 언제 사용할까?
+- 대체로 Link 컴포넌트를 필요로 하지 않을 때 사용한다.
+- 예를들어, form 제출 후 직접 라우팅이 필요할 때
+- Nomad Coder에서는 여러 element를 자식으로 가지는 Link 태그에 href를 붙일 때 사용할 수 있다고도 한다. (a 태그는 자식으로 div를 가져서는 안된다는 스펙 요구사항이 있기 때문에)
