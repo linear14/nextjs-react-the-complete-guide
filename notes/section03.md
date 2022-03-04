@@ -117,3 +117,6 @@ function pushHandler(id) {
 - 대체로 Link 컴포넌트를 필요로 하지 않을 때 사용한다.
 - 예를들어, form 제출 후 직접 라우팅이 필요할 때
 - Nomad Coder에서는 여러 element를 자식으로 가지는 Link 태그에 href를 붙일 때 사용할 수 있다고도 한다. (a 태그는 자식으로 div를 가져서는 안된다는 스펙 요구사항이 있기 때문에)
+
+## 65. Adding a Custom 404 Page
+- `pages` 디렉토리에 `404.js` 파일 하나 만들고 내부에서 커스텀 해주면 됩니다.
