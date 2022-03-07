@@ -6,6 +6,14 @@
 - 정적 파일들을 이곳에 넣어둔다. (이미지, 폰트)
 - 해당 디렉토리 영역 이외에 저장된 파일들에 접근이 불가능하다.
 
+## 77. Adding a General Layout Wrapper Component
+
+### \_app.js
+
+- pages 디렉토리에 있는 모든 페이지로 라우팅 될 때 실행된다.
+- 따라서 Nav Header 등과 같이 공통 컴포넌트를 잡아둘 때 유용하다.
+- components/layout 과 같은 디렉토리에 \_app.js에 사용 될 프로젝트의 전체적인 layout을 담아두면 좋다.
+
 ## 깨우친 것들?
 
 ### 데이터 가공
