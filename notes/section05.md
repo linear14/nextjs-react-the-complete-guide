@@ -77,6 +77,19 @@ import async function getStaticProps() {
 - `fs` 모듈을 사용할 수 있다! 서버사이드 코드에서는 사용해도 괜찮으니깐 당연했던 것이다. 그리고, Next.js는 클라이언트단에 해당 fs 모듈에 대한 import를 넘기지 않고 무시한다. (똑똑하다.. ㅎㅎ)
 - 마찬가지로 `process` 전역 객체도 사용할 수 있다. (Node 런타임 환경에서 돌아가는 코드이기 때문)
 
+## 92. A Look Behind The Scenes
+
+### 페이지 준비 관련 용어
+
+`Server`: 서버사이드 렌더링 => 나중에 다시 설명한다. (getInitialProps, getServerSideProps)
+`SSG`: Static Site Generation (getStaticProps)
+`Static`: 정보 필요없는 정적 페이지 (no initial props)
+`ISR`: Incremental Static Regeneration (getStaticProps) => 요것도 나중에 다시 설명한다. 간단하게 말하면, 데이터(props)가 계속 바뀔 수 있는 경우에서의 정적 페이지 생성 방식이다.
+
+### 직접 빌드 해보자
+
+- 어떤 페이지가 pre-generated 되었는지 알 수 있다. 또한, 각 페이지가 어떤 특성을 가진 페이지인지 알 수 있다.
+
 ## 깨우친 것들?
 
 ## 더 공부하면 좋을 것들
