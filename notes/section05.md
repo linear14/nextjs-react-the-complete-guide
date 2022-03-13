@@ -90,6 +90,58 @@ import async function getStaticProps() {
 
 - 어떤 페이지가 pre-generated 되었는지 알 수 있다. 또한, 각 페이지가 어떤 특성을 가진 페이지인지 알 수 있다.
 
+## 93 ~ 95. Incremental Static Generation (ISR) + More Options
+
+### 포함 강의
+
+93. Utilizing Incremental Static Generation (ISR)
+94. ISR: A Look Behind The Scenes
+95. A Closer Look At "getStaticProps" & Configuration Options
+
+### ISR
+
+- 페이지의 데이터가 빈번하게 바뀌는 상황이라면? getStaticProps를 통해 정적 페이지를 미리 만들어두는게 무슨 의미가 있는가? 데이터가 바뀔 때 마다 빌드할 수도 없고..
+- 그럴 때 사용하는 방법이 `Incremental Static Generation`이다.
+- re-deploy 할 필요없이 새로운 정적 페이지를 만드는 방식이다.
+- 특정 시간(X초) 이내의 요청에 대해서는 기존의 페이지를, 특정 시간 이후의 요청에 대해서는 새로운 정적 페이지를 만들기 위해 `getStaticProps`를 다시 실행하여 새로운 페이지를 만들어 캐싱하고 전달한다. => 즉 2가지 경우로 나누어 클라이언트에게 전달한다.
+
+### revalidate
+
+- `revalidate` key를 사용한다.
+- value는 초 단위의 시간.
+
+```jsx
+export async function getStaticProps() {
+  return {
+    props: { ... },
+    revalidate: 10 // 초 단위
+  }
+}
+```
+
+- 빈번하게 데이터가 바뀌는 페이지의 경우 1초 정도로 짧게 설정할 수 있고, 페이지의 데이터 변화가 많이 없을 경우에는 10분(600초) 정도로 설정할 수 있다.
+- development 모드에서는 revalidate 적용 안된다. 즉, 페이지 새로고침 할 때 마다 항상 최신의 페이지를 유지해 보여준다. (배포 서버에서만 적용됨! 화면 개발하는데 저 옵션때문에 reloading이 안되면 안되니깐..)
+
+### 추가 옵션) notFound
+
+- getStaticProps의 반환 값 key로 `notFound`를 설정할 수 있다.
+- 값은 T/F
+- 서버에서 응답받은 데이터에 오류가 있다거나, path에 오류가 있다면 `notFound: true`를 설정해서 404 페이지로 보내버릴 수 있다.
+- 검증 단계에서 사용하면 된다.
+
+### 추가 옵션) redirect
+
+- notFound와 마찬가지로 특정 상황에서 다른 페이지로 보낼 수 있다.
+- 내부에 `destination` key를 사용해서 특정 주소로 라우팅 할 수 있다.
+
+```jsx
+return {
+  redirect: {
+    destination: "/no-data",
+  },
+};
+```
+
 ## 깨우친 것들?
 
 ## 더 공부하면 좋을 것들
