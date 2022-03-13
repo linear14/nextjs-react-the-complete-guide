@@ -72,6 +72,11 @@ import async function getStaticProps() {
 - 해당 메서드가 존재한다면, 먼저 `getStaticProps`를 실행시켜 페이지를 위한 props를 준비한다.
 - 이후에 페이지 렌더링 함수를 실행한다. 서버에서 준비한 props를 사용해 렌더링 작업을 처리한다.
 
+## 91. Running Server-side Code & Using the Filesystem
+
+- `fs` 모듈을 사용할 수 있다! 서버사이드 코드에서는 사용해도 괜찮으니깐 당연했던 것이다. 그리고, Next.js는 클라이언트단에 해당 fs 모듈에 대한 import를 넘기지 않고 무시한다. (똑똑하다.. ㅎㅎ)
+- 마찬가지로 `process` 전역 객체도 사용할 수 있다. (Node 런타임 환경에서 돌아가는 코드이기 때문)
+
 ## 깨우친 것들?
 
 ## 더 공부하면 좋을 것들
