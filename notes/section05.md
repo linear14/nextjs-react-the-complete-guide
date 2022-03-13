@@ -22,21 +22,55 @@
   - Server-side Rendering: 서버에 request가 넘어올 때 페이지가 만들어진다.
 
 ## 88. Introducing Static Generation with "getStaticProps"
+
+### Static Generation
+
 - Html 파일이 빌드 시 미리 서버사이드에서 만들어진다.
 - 데이터도 Server에서, 코드 접근 및 파일 시스템 접근 역시 서버사이드에 처리된다.
 - 배포를 위해 만들어진 페이지를 서버 혹은 CDN 등의 서비스 제공 수단에 캐싱하고, 서버에 요청이 온다면 캐싱된 페이지를 클라이언트에게 바로 넘겨준다.
 - 페이지를 받은 클라이언트는 js 코드를 이용해 hydrate 시킨다. (최종적으로는 React 앱이 된다.)
 
 ### getStaticProps()
+
 - 어떤 페이지가 pre-generated 되어야하는지, 어떤 데이터가 해당 페이지를 만드는데 사용되는지를 결정하는 특수 메서드.
+
 ```jsx
 export async function getStaticProps(context) { ... }
 ```
+
 - page component에서만 사용해야한다. (React Component는 안된다.)
-- async니깐 Promise를 리턴하겠지?
+- async니깐 당연히 Promise를 리턴하겠지?
 - 서버에서 사용 가능한 코드만 작성한다. (window 객체같은건 이용 못한다.)
 - 여기서 사용되는 코드는 클라이언트에게 보여지지 않는다. (코드 bundle에 포함되지 않는다.) 따라서, 데이터베이스 인증 등에 관한 민감한 정보들을 해당 메서드 내에서 작성해도 된다.
 
+## 90. Adding "getStaticProps" To Pages
+
+- `getStaticProps`를 사용한다는 것은 해당 페이지가 pre-generated 될 것이라는 것을 Next.js에게 명시적으로 알려주는 역할도 한다.
+- 페이지가 만들어지기 전에 데이터를 미리 fetch한다. 이후에 Next.js에 의해 페이지가 pre-render된다.
+
+### 어떻게 사용하는데?
+
+```jsx
+function SomePage(props) {
+  const { keyA, keyB } = props;
+
+  return (<Component/>);
+}
+
+import async function getStaticProps() {
+  // fetch or some tasks...
+
+  return {
+    props: {
+      keyA: something,
+      keyB: something
+    }
+  }
+}
+```
+
+- 해당 메서드가 존재한다면, 먼저 `getStaticProps`를 실행시켜 페이지를 위한 props를 준비한다.
+- 이후에 페이지 렌더링 함수를 실행한다. 서버에서 준비한 props를 사용해 렌더링 작업을 처리한다.
 
 ## 깨우친 것들?
 
