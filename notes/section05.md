@@ -142,6 +142,70 @@ return {
 };
 ```
 
+## 96 ~ 99. Pre-generate with Dynamic Pages and getStaticPaths Function
+
+### 포함 강의
+
+96. Working With Dynamic Parameters
+97. Introducing "getStaticPaths" For Dynamic Pages
+98. Using "getStaticPaths"
+99. "getStaticPaths" & Link Prefetching: Behind The Scenes
+
+### 우선 Parameter를 받아온다.
+
+- 클라이언트 사이드 코드 영역에서 파라미터를 받아오기 위해 사용했던 방식
+
+```jsx
+const router = useRouter();
+const { query } = router;
+// query.param1
+// query.param2
+// ...
+```
+
+- 서버 사이드 (여기서는 getStaticProps) 코드 영역에서 파라미터를 받아오기 위해 사용하는 방식
+
+```jsx
+const { params } = context;
+// params.param1
+// params.param2
+// ...
+```
+
+- Static Generation (SSG) 을 위해서라면 서버사이드에서 parameter를 챙겨와서 data fetch과정을 거치는게 맞다.
+
+### getStaticPaths
+
+- dynamic page 렌더링을 위해 getStaticProps에서 parameter를 그냥 가져와서 사용하면 오류가 발생한다.
+- Next.js의 getStaticProps 메서드에 포함되는 페이지는 디폴트로 pre-generated를 하기 때문에 빌드 시 파일로 존재한다.
+- 하지만, dynamic 페이지의 경우 pre-generated가 불가능한데, parameter에 따라 fetch 되는 결과 데이터가 달라지므로 parameter의 후보를 알지 않는 이상 미리 만들어두는게 불가능하다.
+- 따라서, 그러한 parameter의 후보들을 미리 설정해두는 작업이 필요한데, 그것이 getStaticPaths의 역할이다.
+- (후보들이 미리 설정된다면 페이지도 pre-generate 가능하기 때문이다.)
+
+### getStaticPaths 사용법
+
+```jsx
+export async function getStaticPaths() {
+  return {
+    paths: [
+      { params: { pid: "p1" } },
+      { params: { pid: "p2" } },
+      { params: { pid: "p3" } },
+    ],
+  };
+}
+```
+
+### 빌드해보자
+
+- 최초 홈페이지 진입시 모든 데이터들이 이미 다운로드 되어져있다.
+- 그래서 다른 페이지로 이동하더라도 서버에 요청을 하는게 아니라, 이미 다운로드 되어진 것들을 바탕으로 SPA처럼 행동하게 된다.
+
 ## 깨우친 것들?
 
 ## 더 공부하면 좋을 것들
+
+## 궁금한 것
+
+- (96 ~ 99) 루트 페이지로 진입 (/) 하면 pre-generated 된 fetched data까지 json 파일로 받아지는 것을 확인했는데, 다른 페이지로 접근하면 fetched data 파일을 다운로드 받지 않는것 역시 확인했다. 어떤 동작 방식으로 이러는건지 궁금하다.
+- (96 ~ 99) 마찬가지로, 루트 페이지가 아닌 페이지로 최초 진입 시, (예를 들어 /p2 로 설명한다.) p2에 해당하는 pre-rendered page만 파일로 받고 데이터는 별도의 파일로 저장되지 않는 것을 확인했다. 또한, 해당 상태에서 홈으로 진입 시 SPA 처럼 동작하여 새로운 메인 페이지를 다운로드 받지 않는다. 전체 static 데이터만 다운로드 받아서 파일로 저장한다. (p1.json, p2.json, p3.json) 이 흐름까지 이해해봐야겠다.
