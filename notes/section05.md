@@ -224,6 +224,15 @@ export async function getStaticPaths() {
 - 클라이언트 단에서 예외 페이지 처리를 해도 되지만, `getStaticProps` 단에서 `notFound: true` 설정을 통해 검증하는 방식이다. (개인적으로 선호할 방식이 될 것 같다.)
 - 개인적으로 생각해봤는데, loading이 보인 다음에 404페이지로 이동하면 어색할 것 같아서 `fallback: 'blocking'`을 사용하는 것도 괜찮아보인다.
 
+## 103. Introducing "getServerSideProps" for Server-side Rendering (SSR)
+
+- 앞서 배웠던 SSG 같은 경우는 일반적으로는 최초 빌드시에만 getStaticProps 등에 접근하게 된다. (ISR 같은 경우는 아니긴 하지만..!)
+- 만약 모든 Request에 대해 진정한 서버사이드 렌더링이 필요하다면?
+- 혹은, 서버에 요청되는 객체가 실제로 필요하다면? (예를 들어 쿠키 정보같은거?!)
+- Next.js에서는 매 요청마다 `real server-side` 에서 코드가 돌아갈 수 있도록 지원하는 방식이 있다. (re-executed for every request) => `getServerSideProps()`
+- 페이지가 만들어 질 때 마다 (요청이 있을 때 마다) 실행된다.
+- getStaticProps랑 같이 쓰면 충돌날 수 있다. (왜냐하면 결과적인 목적은 결국 Page를 렌더링 하는데 필요한 데이터(props)를 넘겨주는 역할을 하기 때문이다.)
+
 ## 깨우친 것들?
 
 ## 더 공부하면 좋을 것들
