@@ -230,8 +230,39 @@ export async function getStaticPaths() {
 - 만약 모든 Request에 대해 진정한 서버사이드 렌더링이 필요하다면?
 - 혹은, 서버에 요청되는 객체가 실제로 필요하다면? (예를 들어 쿠키 정보같은거?!)
 - Next.js에서는 매 요청마다 `real server-side` 에서 코드가 돌아갈 수 있도록 지원하는 방식이 있다. (re-executed for every request) => `getServerSideProps()`
-- 페이지가 만들어 질 때 마다 (요청이 있을 때 마다) 실행된다.
+- 페이지가 만들어 질 때 마다 (요청이 있을 때 마다) 실행된다. (not pre-render)
 - getStaticProps랑 같이 쓰면 충돌날 수 있다. (왜냐하면 결과적인 목적은 결국 Page를 렌더링 하는데 필요한 데이터(props)를 넘겨주는 역할을 하기 때문이다.)
+
+## 104 ~ 107. "getServerSideProps" & Dynamic Pages
+
+### 포함 강의
+
+104. Using "getServerSideProps" for Server-side Rendering
+105. "getServerSideProps" and its Context
+106. Dynamic Pages & "getServerSideProps"
+107. "getServerSideProps": Behind The Scenes
+
+### getServerSideProps 조금 더 이야기해보면
+
+- 기본적으로 getStaticProps에서 반환하던 객체의 구성 key-value를 모두 사용해도 된다. (props, notFound, redirect ...)
+- 하지만, revalidate는 사용할 이유가 없는데, 왜냐하면 모든 request마다 실행되는 함수이기 때문이다.
+- 이걸 왜 사용할까 생각해봤는데, 현재 어떤 사용자의 정보를 보여줘야 한다고 했을 경우, cookie에 들어있는 인증 토큰등의 정보를 서버에 넘겨줘야 해당 사용자의 정보를 받아올 수 있기 때문이다. 이런 것들은 getStaticProps와 getStaticPaths등으로 미리 설정하기가 까다롭기도 하고 사용자 정보가 pre-fetched 되어있는 것도 보안적으로도 합당하지 않다고 생각한다. (그리고 강의에서는 시도때도 없이 빈번하게 페이지 데이터가 바뀌는 경우에도 사용할 수 있다고 한다.)
+- 다시 한 번 말하지만, `매 요청마다 실행`된다!
+
+### context
+
+- request header 의 값들을 이용할 수 있으며, 반대로 response로 어떤 헤더값을 추가하는 설정도 가능하다.
+
+```jsx
+const { req, res } = context;
+```
+
+- 여기서 사용되는 req, res 객체는 Node.js에서 사용되는 객체와 같다.
+
+### Dynamic Pages
+
+- getStaticPaths가 필요없다.. 왜냐하면, getServerSideProps는 100% 서버에서 실행됨이 보장되기 때문이며, pre-generated 되지도 않기 때문이다.
+- 그래서 `const { params } = context` 로 segments들을 꺼내온 뒤, dynamic key로 값을 꺼내서 사용하기만 하면 된다.
 
 ## 깨우친 것들?
 
