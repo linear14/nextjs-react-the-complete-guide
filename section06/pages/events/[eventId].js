@@ -1,25 +1,11 @@
-import { Fragment } from 'react';
-import { useRouter } from 'next/router';
+import { Fragment } from "react";
 
-import { getEventById } from '../../dummy-data';
-import EventSummary from '../../components/event-detail/event-summary';
-import EventLogistics from '../../components/event-detail/event-logistics';
-import EventContent from '../../components/event-detail/event-content';
-import ErrorAlert from '../../components/ui/error-alert';
+import EventSummary from "../../components/event-detail/event-summary";
+import EventLogistics from "../../components/event-detail/event-logistics";
+import EventContent from "../../components/event-detail/event-content";
 
-function EventDetailPage() {
-  const router = useRouter();
-
-  const eventId = router.query.eventId;
-  const event = getEventById(eventId);
-
-  if (!event) {
-    return (
-      <ErrorAlert>
-        <p>No event found!</p>
-      </ErrorAlert>
-    );
-  }
+function EventDetailPage(props) {
+  const { event } = props;
 
   return (
     <Fragment>
@@ -35,6 +21,42 @@ function EventDetailPage() {
       </EventContent>
     </Fragment>
   );
+}
+
+export async function getStaticProps(context) {
+  const { params } = context;
+  const { eventId } = params;
+
+  const url = "https://nextjs-course-e1c99-default-rtdb.firebaseio.com/events.json";
+  const response = await fetch(url);
+  const data = (await response.json())[eventId];
+
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      event: data,
+    },
+  };
+}
+
+export async function getStaticPaths() {
+  const url = "https://nextjs-course-e1c99-default-rtdb.firebaseio.com/events.json";
+  const response = await fetch(url);
+  const data = await response.json();
+
+  const pathsWithParams = Object.values(data).map((item) => ({
+    params: { eventId: item.id },
+  }));
+
+  return {
+    paths: pathsWithParams,
+    fallback: "blocking",
+  };
 }
 
 export default EventDetailPage;
