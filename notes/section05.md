@@ -271,11 +271,25 @@ const { req, res } = context;
   - 특정한 사용자에 대한 개인 정보 (유저 프로필, 최근 주문 정보)
   - 매우 한정적이고 부분적인 공간에서만 사용되는 데이터
 
+## 111. Using the "useSWR" NextJS Hook
+
+- Stale While Revalidate
+- 요청/응답 캐싱도 해주고, 에러가 있을 때 revalidation retry도 지원하고.. 코드도 간단해지고..!
+- Next.js팀에서 만든 Hook 이지만, 굳이 Next 안쓰더라도 사용한다.
+
+## 112. Combining Pre-Fetching With Client-Side Fetching
+
+- getStaticProps / getServerSideProps로 최초 데이터를 props로 클라이언트에게 넘겨주고, 이후에 클라이언트에서 최신 데이터를 덧붙이는 방식도 사용할 수 있다.
+- (그런데, 완성형 데이터를 보여주는 getServerSideProps보다는 getStaticProps에서 더 많이 혼용될 것 같다는 생각)
+- 이렇게 하면, 필요한 정보를 서버사이드에서 마크업형태로 준비하기 때문에 SEO에 보다 최적화 할 수 있다. 또한, 사용자 입장에서도 데이터가 미리 보이기 때문에 잘 사용한다면 사용성이 좋아질 수 있다.
+
 ## 깨우친 것들?
 
 - (109) 기본적으로 서버에 pre-generated된 페이지가 없다면, 라우팅 페이지 컴포넌트의 default가 pre-rendered 되어서 사용자에게 넘어간다. (그래서, getStaticPaths에서 fallback true 옵션을 켰을 때 pre-generated된 페이지가 없으니깐 처음에는 default 페이지에 대한 HTML 파일이 넘어간 것이고, 해당 강의에서도 빈 div가 아닌, No Data를 나타내는 div가 넘어온 것이다.)
 
 ## 더 공부하면 좋을 것들
+
+- useSWR
 
 ## 궁금한 것
 
