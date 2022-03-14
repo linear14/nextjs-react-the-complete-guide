@@ -264,7 +264,16 @@ const { req, res } = context;
 - getStaticPaths가 필요없다.. 왜냐하면, getServerSideProps는 100% 서버에서 실행됨이 보장되기 때문이며, pre-generated 되지도 않기 때문이다.
 - 그래서 `const { params } = context` 로 segments들을 꺼내온 뒤, dynamic key로 값을 꺼내서 사용하기만 하면 된다.
 
+## 108. Introducing Client-Side Data Fetching (And When To Use It)
+
+- pre-rendering 될 필요 없는 정보나 될 수 없는 정보들은 클라이언트에서 처리하는게 좋다.
+  - 너무 빠르게 바뀌는 정보일 경우 (주식)
+  - 특정한 사용자에 대한 개인 정보 (유저 프로필, 최근 주문 정보)
+  - 매우 한정적이고 부분적인 공간에서만 사용되는 데이터
+
 ## 깨우친 것들?
+
+- (109) 기본적으로 서버에 pre-generated된 페이지가 없다면, 라우팅 페이지 컴포넌트의 default가 pre-rendered 되어서 사용자에게 넘어간다. (그래서, getStaticPaths에서 fallback true 옵션을 켰을 때 pre-generated된 페이지가 없으니깐 처음에는 default 페이지에 대한 HTML 파일이 넘어간 것이고, 해당 강의에서도 빈 div가 아닌, No Data를 나타내는 div가 넘어온 것이다.)
 
 ## 더 공부하면 좋을 것들
 
