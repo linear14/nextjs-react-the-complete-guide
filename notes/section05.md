@@ -212,9 +212,17 @@ export async function getStaticPaths() {
 
 - 이 값을 true로 설정하면, Next.js에게 paths로 등록되지 않은 경로일지라도 유효한 값임을 인지시켜준다.
 - 즉, paths로 등록되지 않은 경로에 대해서는 빌드시 pre-generated 되지 않고, 서버에 요청이 가는 경우에만 페이지가 만들어지도록 허용한다.
-- 단, 클라이언트 Component 단에서 fallback 처리(Loading 방식 처리)가 필요하다. 왜냐하면 path로 등록되지 않은 url로 직접 라우팅(새로고침 등)을 할 경우 아직 generated 되지 않은 페이지를 받아올 시 props를 받아오지 않기 때문이다. (props를 콘솔 찍어보면 undefined 뜰것이다.)
+- 단, 클라이언트 Component 단에서 fallback 처리(Loading 방식 처리)가 필요하다. 왜냐하면 path로 등록되지 않은 url로 직접 라우팅(새로고침 등)을 할 경우 fallback: true에 의해 `props가 없는 페이지를 즉시 클라이언트에게 넘겨주기 때문`이다. (서버에 generated 된 페이지가 없는 경우, props를 콘솔 찍어보면 undefined 뜰것이다.)
 - fallback true를 통해 만들어진 페이지 역시 처음에만 로딩이 길어질 뿐이고, 이후에는 서버에 파일로 저장되기 때문에 이후 접속 사용자는 해당 캐싱 파일을 사용하게 된다.
 - T/F 이외에도 'blocking' 값을 value로 둘 수 있다. 이렇게 하면 클라이언트 단에서 특별한 fallback 처리 할 필요 없이, 서버에서 페이지 pre-generate 단계를 마친 뒤 클라이언트에게 HTML 파일을 넘긴다. (사용자가 화면을 보는데 걸리는 시간이 조금 더 걸리겠지? 강의자는 많이 쓰는 방식이지만, 프로그램의 지향점에 따라 결정하면 된다.)
+
+## 102. Fallback Pages & "Not Found" Pages
+
+### usecase
+
+- `getStaticPaths`에서 `fallback: true`로 설정시, 등록하지 않은 파라미터의 검색을 `getStaticProps`에서 실행하게 된다. 여기에서 만약 데이터가 없다면 클라이언트 단에서 에러를 뿜게 된다.
+- 클라이언트 단에서 예외 페이지 처리를 해도 되지만, `getStaticProps` 단에서 `notFound: true` 설정을 통해 검증하는 방식이다. (개인적으로 선호할 방식이 될 것 같다.)
+- 개인적으로 생각해봤는데, loading이 보인 다음에 404페이지로 이동하면 어색할 것 같아서 `fallback: 'blocking'`을 사용하는 것도 괜찮아보인다.
 
 ## 깨우친 것들?
 
