@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 
 import EventList from "../../components/events/event-list";
 import EventsSearch from "../../components/events/events-search";
+import { getAllEvents } from "../../helpers/api-util";
 
 function AllEventsPage(props) {
   const router = useRouter();
@@ -23,13 +24,11 @@ function AllEventsPage(props) {
 }
 
 export async function getStaticProps() {
-  const url = "https://nextjs-course-e1c99-default-rtdb.firebaseio.com/events.json";
-  const response = await fetch(url);
-  const data = await response.json();
+  const allEvents = await getAllEvents();
 
   return {
-    props: { events: Object.values(data) },
-    revalidate: 10,
+    props: { events: allEvents },
+    revalidate: 60,
   };
 }
 

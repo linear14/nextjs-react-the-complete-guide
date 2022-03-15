@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
+import { getFeaturedEvents, getSpecificEvent } from "../../helpers/api-util";
 
 function EventDetailPage(props) {
   const { event } = props;
@@ -27,11 +28,9 @@ export async function getStaticProps(context) {
   const { params } = context;
   const { eventId } = params;
 
-  const url = "https://nextjs-course-e1c99-default-rtdb.firebaseio.com/events.json";
-  const response = await fetch(url);
-  const data = (await response.json())[eventId];
+  const event = await getSpecificEvent(eventId);
 
-  if (!data) {
+  if (!event) {
     return {
       notFound: true,
     };
@@ -39,18 +38,16 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      event: data,
+      event,
     },
   };
 }
 
 export async function getStaticPaths() {
-  const url = "https://nextjs-course-e1c99-default-rtdb.firebaseio.com/events.json";
-  const response = await fetch(url);
-  const data = await response.json();
+  const featuredEvents = await getFeaturedEvents();
 
-  const pathsWithParams = Object.values(data).map((item) => ({
-    params: { eventId: item.id },
+  const pathsWithParams = featuredEvents.map((event) => ({
+    params: { eventId: event.id },
   }));
 
   return {

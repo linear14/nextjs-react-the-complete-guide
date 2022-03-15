@@ -1,4 +1,5 @@
 import EventList from "../components/events/event-list";
+import { getFeaturedEvents } from "../helpers/api-util";
 
 function HomePage(props) {
   const { featuredEvents } = props;
@@ -10,16 +11,13 @@ function HomePage(props) {
   );
 }
 
-export async function getServerSideProps() {
-  const url = "https://nextjs-course-e1c99-default-rtdb.firebaseio.com/events.json";
-  const response = await fetch(url);
-  const data = await response.json();
-
-  const featuredEvents = Object.values(data).filter((item) => item.isFeatured === true);
+export async function getStaticProps() {
+  const featuredEvents = await getFeaturedEvents();
   return {
     props: {
       featuredEvents,
     },
+    revalidate: 1800,
   };
 }
 

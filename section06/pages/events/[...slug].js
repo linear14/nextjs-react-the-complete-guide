@@ -4,11 +4,13 @@ import EventList from "../../components/events/event-list";
 import ResultsTitle from "../../components/events/results-title";
 import Button from "../../components/ui/button";
 import ErrorAlert from "../../components/ui/error-alert";
+import { getFilteredEvents } from "../../helpers/api-util";
 
 function FilteredEventsPage(props) {
-  const { isInValid, filteredEvents, date } = props;
+  const { hasValidationError, filteredEvents, date } = props;
 
-  if (isInValid) {
+  // 유효한 필터 형식이 아닌 경우
+  if (hasValidationError) {
     return (
       <Fragment>
         <ErrorAlert>
@@ -21,6 +23,7 @@ function FilteredEventsPage(props) {
     );
   }
 
+  // 데이터가 없을 경우
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <Fragment>
@@ -42,6 +45,12 @@ function FilteredEventsPage(props) {
   );
 }
 
+function isValidFilter(year, month) {
+  return (
+    isNaN(year) || isNaN(month) || year > 2030 || year < 2021 || month < 1 || month > 12
+  );
+}
+
 export async function getServerSideProps(context) {
   const { params } = context;
   const { slug } = params;
@@ -50,29 +59,15 @@ export async function getServerSideProps(context) {
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
 
-  if (
-    isNaN(numYear) ||
-    isNaN(numMonth) ||
-    numYear > 2030 ||
-    numYear < 2021 ||
-    numMonth < 1 ||
-    numMonth > 12
-  ) {
+  if (isValidFilter(numYear, numMonth)) {
     return {
       props: {
-        isInValid: true,
+        hasValidationError: true,
       },
     };
   }
 
-  const url = "https://nextjs-course-e1c99-default-rtdb.firebaseio.com/events.json";
-  const response = await fetch(url);
-  const data = await response.json();
-
-  const filteredEvents = Object.values(data).filter((item) => {
-    const eventDate = new Date(item.date);
-    return eventDate.getFullYear() === numYear && eventDate.getMonth() === numMonth - 1;
-  });
+  const filteredEvents = await getFilteredEvents(numYear, numMonth);
 
   return {
     props: {
