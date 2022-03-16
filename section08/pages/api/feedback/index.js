@@ -1,16 +1,7 @@
-import fs from "fs/promises";
-import path from "path";
-
-function buildFeedbackPath() {
-  return path.join(process.cwd(), "data", "feedback.json");
-}
-
-async function extractFeedback(filePath) {
-  const fileData = await fs.readFile(filePath);
-  const data = JSON.parse(fileData);
-
-  return data;
-}
+import {
+  buildFeedbackPath,
+  extractFeedback,
+} from "../../../helpers/feedback-util";
 
 async function handler(req, res) {
   if (req.method === "GET") {
