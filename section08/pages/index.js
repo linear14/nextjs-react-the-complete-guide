@@ -1,11 +1,35 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 
 function HomePage() {
+  const [feedbackList, setFeedbackList] = useState([]);
+
   const emailInputRef = useRef();
   const feedbackInputRef = useRef();
 
-  function submitFormHandler(e) {
+  async function submitFormHandler(e) {
     e.preventDefault();
+
+    const enteredEmail = emailInputRef.current.value;
+    const enteredFeedback = feedbackInputRef.current.value;
+
+    const reqBody = { email: enteredEmail, feedbackText: enteredFeedback };
+
+    const response = await fetch("/api/feedback", {
+      method: "POST",
+      body: JSON.stringify(reqBody),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    alert(`${data.feedback.email}님의 피드백 등록`);
+  }
+
+  async function loadFeedbackHandler() {
+    const response = await fetch("/api/feedback");
+    const data = await response.json();
+
+    setFeedbackList(data.feedback);
   }
 
   return (
@@ -22,6 +46,13 @@ function HomePage() {
         </div>
         <button>Send Feedback</button>
       </form>
+      <hr />
+      <button onClick={loadFeedbackHandler}>Load Feedback</button>
+      <ul>
+        {feedbackList.map((fb) => (
+          <li key={fb.id}>{fb.text}</li>
+        ))}
+      </ul>
     </div>
   );
 }

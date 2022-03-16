@@ -1,8 +1,24 @@
 import fs from "fs/promises";
 import path from "path";
 
+function buildFeedbackPath() {
+  return path.join(process.cwd(), "data", "feedback.json");
+}
+
+async function extractFeedback(filePath) {
+  const fileData = await fs.readFile(filePath);
+  const data = JSON.parse(fileData);
+
+  return data;
+}
+
 async function handler(req, res) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
+    const filePath = buildFeedbackPath();
+    const data = await extractFeedback(filePath);
+
+    res.status(200).json({ feedback: data });
+  } else if (req.method === "POST") {
     const { email, feedbackText } = req.body;
 
     const newFeedback = {
@@ -12,9 +28,8 @@ async function handler(req, res) {
     };
 
     // store
-    const filePath = path.join(process.cwd(), "data", "feedback.json");
-    const fileData = await fs.readFile(filePath);
-    const data = JSON.parse(fileData);
+    const filePath = buildFeedbackPath();
+    const data = await extractFeedback(filePath);
     data.push(newFeedback);
     await fs.writeFile(filePath, JSON.stringify(data));
 
