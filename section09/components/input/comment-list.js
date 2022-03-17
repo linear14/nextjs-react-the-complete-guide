@@ -1,6 +1,17 @@
-import classes from './comment-list.module.css';
+import { useEffect } from "react";
+import classes from "./comment-list.module.css";
 
 function CommentList() {
+  async function getCommentList() {
+    const response = await fetch("/api/comment");
+    const data = await response.json();
+    console.log(data);
+  }
+
+  useEffect(() => {
+    getCommentList();
+  }, []);
+
   return (
     <ul className={classes.comments}>
       {/* Render list of comments - fetched from API */}
