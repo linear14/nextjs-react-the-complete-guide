@@ -1,0 +1,7 @@
+- 몽고 db 사용 방법
+  - 무료 cluster 생성 방식 습득
+  - 간단한 collection / document 생성 방식 습득
+  - npm mongodb 라이브러리 이용한 connection 방식 학습
+  - 나중에 쓸 일 있으면 문서보면서 하면 될 것 같음
+- 서버 예외 처리
+  - 서버 사이드 코드에서의 예외 처리
