@@ -44,3 +44,31 @@ if (!result.error) {
 ### 로그아웃 구현
 
 - 가지고 있는 jwt 토큰만 없애주면 된다. 이는 `next-auth/react`의 `signOut` 메서드를 사용하면 알아서 처리해준다.
+
+### useSession
+
+- 현재 세션이 유지되고 있는지를 확인하고 (여기서는 jwt 토큰이 존재하는 경우) 해당 세션에 포함된 정보를 가져온다.
+- 이를 통해, 화면에 렌더링 되는 컴포넌트를 분기처리 하거나 / 특정 기능이 안되도록 만드는 등의 작업이 가능해진다.
+- 오로지 클라이언트 영역에서만 사용 가능하다. (getSession은 클라이언트 및 서버까지 사용 가능)
+- NextAuth V4 에서 사용하는 방식은 강의에서와 다르다.
+- 아래 코드는 [공식문서](https://next-auth.js.org/getting-started/client#usesession)에서 가져온건데, 설명이 잘 되어있어서 참조한다.
+
+```jsx
+import { useSession } from "next-auth/react";
+
+export default function Component() {
+  const { data: session, status } = useSession();
+
+  if (status === "authenticated") {
+    return <p>Signed in as {session.user.email}</p>;
+  }
+
+  return <a href="/api/auth/signin">Sign in</a>;
+}
+```
+
+- `data`: This can be three values: Session / undefined / null.
+  - when the session hasn't been fetched yet, data will undefined
+  - in case it failed to retrieve the session, data will be null
+  - in case of success, data will be Session.
+- `status`: enum mapping to three possible session states: "loading" | "authenticated" | "unauthenticated"
