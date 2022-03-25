@@ -72,3 +72,12 @@ export default function Component() {
   - in case it failed to retrieve the session, data will be null
   - in case of success, data will be Session.
 - `status`: enum mapping to three possible session states: "loading" | "authenticated" | "unauthenticated"
+
+### getSession
+
+- session 정보를 얻는것은 useSession과 동일
+- await를 이용해서 반환값을 기다려야 한다. (혹은 Promise then을 사용해도 좋다.)
+- 클라이언트 사이드 / 서버 사이드에서 모두 사용 가능하다.
+- 따라서, 정적 페이지이기를 원하는 페이지에서는 클라이언트 사이드 (useSession 사용해도 좋다.)
+- SSR 페이지이기를 원하는 페이지에서는 서버 사이드 목적으로 사용하면 된다.
+- 보통 서버사이드에서 접근 권한 없는 페이지에 접근 시 redirect 목적으로 많이 사용하는 것 같다.
